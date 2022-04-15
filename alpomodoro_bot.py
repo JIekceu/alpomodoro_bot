@@ -29,7 +29,8 @@ def start(message):
         menu = types.KeyboardButton("/Menu")
         markup.add(menu)
         bot.send_message(message.from_user.id,
-                         text="Hi, {0.first_name}! I'm Pomodoro and I'll try to save your time. Press /Menu to begin.\n\n(Bot run in test mode, speed x60)"
+                         text="Hi, {0.first_name}! I'm Pomodoro and I'll help you to save your time. "
+                              "Press /Menu to begin.\n\n(Bot run in test mode, speed x60)"
                          .format(message.from_user), reply_markup=markup)
     get_continue(message)
 
@@ -124,20 +125,22 @@ def get_worktime(message):
     global worktime_min
     try:
         worktime_min = int(message.text)
+    except ValueError:
+        bot.send_message(message.from_user.id, 'Digits, please! Press /Menu and try again')
+    else:
         bot.send_message(message.from_user.id, 'Input pause time of pomodoro, minutes:')
         bot.register_next_step_handler(message, get_pausetime)
-    except Exception:
-        bot.send_message(message.from_user.id, 'Digits, please! Press /Menu and try again')
 
 
 def get_pausetime(message):
     global pausetime_min
     try:
         pausetime_min = int(message.text)
+    except ValueError:
+        bot.send_message(message.from_user.id, 'Digits, please! Press /Menu and try again')
+    else:
         bot.send_message(message.from_user.id, 'Input quantity of repeats:')
         bot.register_next_step_handler(message, get_repeats)
-    except Exception:
-        bot.send_message(message.from_user.id, 'Digits, please! Press /Menu and try again')
 
 
 def get_repeats(message):
@@ -145,7 +148,7 @@ def get_repeats(message):
     global UserId
     try:
         repeats = int(message.text)
-    except Exception:
+    except ValueError:
         bot.send_message(message.from_user.id, 'Digits, please! Press /Menu and try again')
     keyboard = types.InlineKeyboardMarkup()
     key_yes = types.InlineKeyboardButton(text='Yes', callback_data='yes')
